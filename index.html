@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://kit.fontawesome.com/51521ad82c.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+
+  <body>
+    <div class="card">
+      <div class="search">
+        <input
+          type="text"
+          class="search_bar suggest"
+          name=""
+          id=""
+          placeholder="search"
+        />
+        <button class="search_button">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+      <div class="weather_widget loading">
+        <h2 class="city">Weather in Frankfurt</h2>
+        <h1 class="temperature">25°С</h1>
+        <div class="flex">
+          <img src="" alt="" class="widget_icon" />
+          <div class="description_widget">Cloudy</div>
+        </div>
+        <div class="humidity_widget">Humidity: 60%</div>
+        <div class="wind">Wind speed: 6.2 km/h</div>
+      </div>
+    </div>
+    <script src="./src/lib/request.js"></script>
+    <script src="./src/template-engine.js"></script>
+    <script src="./src/lib/cities.js"></script>
+    <script src="./src/suggest.js"></script>
+
+    <script>
+      const searchBar = document.querySelector(".search_bar");
+      const searchButton = document.querySelector(".search_button");
+      const weatherWidget = document.querySelector(".weather_widget");
+      const city = document.querySelector(".city");
+      const temperature = document.querySelector(".temperature");
+      const widgetIcon = document.querySelector(".widget_icon");
+      const descriptionWidget = document.querySelector(".description_widget");
+      const humidityWidget = document.querySelector(".humidity_widget");
+      const wind = document.querySelector(".wind");
+      const apiKey = "daa7132c51cf3a1fce6102dbe112620f";
+
+      let fetchWeather = (data) => {
+        const { name } = data;
+        const { icon, description } = data.weather[0];
+        const { temp, humidity } = data.main;
+        const { speed } = data.wind;
+        city.textContent = `Weather in ${name}`;
+        temperature.textContent = `${temp}°С`;
+        widgetIcon.src =
+          "https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/" +
+          icon +
+          ".png";
+        descriptionWidget.textContent = `${description}`;
+        humidityWidget.textContent = `Humidity: ${humidity}%`;
+        wind.textContent = `Wind speed: ${speed}km/h`;
+        weatherWidget.classList.remove("loading");
+        console.log(name, icon, description, temp, humidity, speed);
+      };
+
+      navigator.geolocation.getCurrentPosition((data) => {
+        const { latitude, longitude } = data.coords;
+
+        request({
+          url: "https://api.openweathermap.org/data/2.5/weather",
+          params: {
+            lat: latitude,
+            lon: longitude,
+            units: "metric",
+            appid: apiKey,
+          },
+          onSuccess: (data) => {
+            fetchWeather(data);
+          },
+        });
+      });
+
+      function renderContent(location) {
+        request({
+          url:
+            "https://api.openweathermap.org/data/2.5/weather?q=" +
+            location +
+            "&units=metric&appid=" +
+            apiKey,
+          onSuccess: (data) => {
+            fetchWeather(data);
+          },
+        });
+      }
+
+      searchButton.addEventListener("click", function () {
+        renderContent(searchBar.value);
+      });
+
+      searchBar.addEventListener("keyup", function (event) {
+        if (event.key == "Enter") {
+          renderContent(searchBar.value);
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        renderContent("Frankfurt");
+      });
+
+      const suggest = new Suggest(document.querySelector(".suggest"), {
+        data: cities.map((city) => city.city),
+      });
+    </script>
+  </body>
+</html>

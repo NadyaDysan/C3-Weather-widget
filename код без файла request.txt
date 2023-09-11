@@ -1,0 +1,45 @@
+
+        // let weather = {
+        //     apiKey: "daa7132c51cf3a1fce6102dbe112620f",
+        //     fetchWeather: function (location) {
+        //         fetch(
+        //             "https://api.openweathermap.org/data/2.5/weather?q="
+        //             + location
+        //             + "&units=metric&appid="
+        //             + this.apiKey
+        //         )
+        //             .then((response) => response.json())
+        //             .then((data) => this.displayWeather(data));
+        //     },
+        //     displayWeather: function (data) {
+        //         const { name } = data;
+        //         const { icon, description } = data.weather[0];
+        //         const { temp, humidity } = data.main;
+        //         const { speed } = data.wind;
+        //         city.textContent = `Weather in ${name}`;
+        //         temperature.textContent = `${temp}°С`;
+        //         widgetIcon.src = "https://openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/" + icon + ".png";
+        //         descriptionWidget.textContent = `${description}`;
+        //         humidityWidget.textContent = `Humidity: ${humidity}%`;
+        //         wind.textContent = `Wind speed: ${speed}km/h`;
+        //         weatherWidget.classList.remove("loading");
+        //         console.log(name, icon, description, temp, humidity, speed);
+        //     },
+        //     search: function () {
+        //         this.fetchWeather(searchBar.value)
+        //     }
+        // };
+
+        // searchButton.addEventListener("click", function () {
+        //     weather.search();
+        // });
+
+        // searchBar.addEventListener("keyup", function (event) {
+        //     if (event.key == "Enter") {
+        //         weather.search();
+        //     }
+        // });
+
+        // document.addEventListener('DOMContentLoaded', function (event) {
+        //     weather.fetchWeather('Moscow');
+        // });
